@@ -15,6 +15,9 @@
             :comments (str "https://news.ycombinator.com/" (get-in comments [:attrs :href]))})
          titles (partition 2 users-and-comments))))
 
+(defn hackernews-post? [post]
+  (.contains (:comments post) "news.ycombinator.com/"))
+
 (defn twitter [username]
   (let [user-html (fetch-html (str "https://mobile.twitter.com/" username))
         tweets (html/select user-html [:.tweet])
@@ -26,3 +29,6 @@
             :author user
             :title content})
          contents users urls)))
+
+(defn twitter-post? [post]
+  (.contains (:url post) "twitter.com/"))
