@@ -3,6 +3,9 @@
 
                  ; web server
                  [compojure "1.1.5"]
-                 [ring "1.2.0"]]
+                 [ring "1.2.0"]
+
+                 ; scraping
+                 [enlive "1.1.4"]]
   :plugins [[lein-ring "0.8.7"]]
   :ring {:handler arashi.server/app})
