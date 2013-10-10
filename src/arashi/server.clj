@@ -4,7 +4,7 @@
 
 (defroutes app
   (POST "/superfeedr" req
-        (prn req)
+        (prn (-> req :body slurp))
         "ok"))
 
 (defn run! []
