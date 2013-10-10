@@ -27,17 +27,30 @@
 (defn hackernews-post? [post]
   (.contains (:comments post) "news.ycombinator.com/"))
 
+(defn parse-twitter-date [date]
+  (let [short-date (re-find #"(\d+)(m|h|d)" date)]
+    (if short-date
+      (let [[_ n suffix] short-date
+            expanded-suffix (condp = suffix
+                              "m" "minutes"
+                              "h" "hours"
+                              "d" "days")]
+        (parse-date (str n " " expanded-suffix " ago")))
+      (parse-date date))))
+
 (defn twitter [username]
   (let [user-html (fetch-html (str "https://mobile.twitter.com/" username))
         tweets (html/select user-html [:.tweet])
         contents (map html/text (html/select tweets [:.tweet-text]))
         users (map #(.trim (html/text %)) (html/select tweets [:.username]))
+        timestamps (map html/text (html/select tweets [:.timestamp]))
         urls (map #(str "https://twitter.com/" (first (html/attr-values % :href))) tweets)]
-    (map (fn [content user url]
+    (map (fn [content user url timestamp]
            {:url url
             :author user
+            :timestamp (parse-twitter-date (.trim timestamp))
             :title content})
-         contents users urls)))
+         contents users urls timestamps)))
 
 (defn twitter-post? [post]
   (.contains (:url post) "twitter.com/"))
