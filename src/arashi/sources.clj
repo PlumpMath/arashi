@@ -5,7 +5,10 @@
   (html/html-resource (java.net.URL. url)))
 
 (defn parse-date [date-string]
-  (-> (.parse (com.joestelmach.natty.Parser.) date-string) first .getDates first))
+  (let [dates (.parse (com.joestelmach.natty.Parser.) date-string)]
+    (if (empty? dates)
+      nil
+      (-> dates first .getDates first))))
 
 (defn hackernews []
   (let [frontpage-html (fetch-html "https://news.ycombinator.com")
