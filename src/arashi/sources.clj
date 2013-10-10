@@ -26,5 +26,3 @@
             :author user
             :title content})
          contents users urls)))
-
-(twitter "FrauSchnatalie")
