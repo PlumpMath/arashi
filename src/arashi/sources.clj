@@ -1,4 +1,7 @@
 (ns arashi.sources
+  "Datasources for various services that don't provide RSS/ATOM feeds.
+
+Currently, HackerNews and Twitter are supported."
   (:require [net.cgrand.enlive-html :as html]))
 
 (defn fetch-html [url]
