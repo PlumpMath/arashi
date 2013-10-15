@@ -29,7 +29,7 @@
 
 (defroutes app
   (GET "/" []
-       (list-posts @posts))
+       (list-posts (reverse @posts)))
   (POST "/superfeedr" req
         (prn (-> req :body slurp))
         "ok"))
