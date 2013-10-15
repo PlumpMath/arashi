@@ -2,7 +2,9 @@
   "Datasources for various services that don't provide RSS/ATOM feeds.
 
 Currently, HackerNews and Twitter are supported."
-  (:require [net.cgrand.enlive-html :as html]))
+  (:require [net.cgrand.enlive-html :as html])
+
+  (:import java.util.Calendar))
 
 (defn fetch-html [url]
   (html/html-resource (java.net.URL. url)))
@@ -30,6 +32,12 @@ Currently, HackerNews and Twitter are supported."
 (defn hackernews-post? [post]
   (.contains (:comments post) "news.ycombinator.com/"))
 
+(defn parse-date-with [format date]
+  (try
+    (.parse (java.text.SimpleDateFormat. format) date)
+    (catch java.text.ParseException e
+      nil)))
+
 (defn parse-twitter-date [date]
   (let [short-date (re-find #"(\d+)(m|h|d)" date)]
     (if short-date
@@ -39,7 +47,8 @@ Currently, HackerNews and Twitter are supported."
                               "h" "hours"
                               "d" "days")]
         (parse-date (str n " " expanded-suffix " ago")))
-      (parse-date date))))
+      (or (parse-date-with "dd MMM yy" date)
+          (parse-date-with "dd MMM yy" (str date " " (-> (Calendar/getInstance) (.get Calendar/YEAR) .toString (subs 2))))))))
 
 (defn twitter [username]
   (let [user-html (fetch-html (str "https://mobile.twitter.com/" username))
