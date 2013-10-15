@@ -4,6 +4,8 @@
                  ; web server
                  [compojure "1.1.5"]
                  [ring "1.2.0"]
+                 [hiccup "1.0.4"]
+                 [org.ocpsoft.prettytime/prettytime "3.1.0.Final"]
 
                  ; scraping
                  [enlive "1.1.4"]
