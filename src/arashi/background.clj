@@ -33,16 +33,15 @@ Uses a backoff to check non-frequently updated sources less often."
       (change-fn interval))))
 
 
-(defn fetch-posts [fetch-fns]
-  (let [posts (ref (p/posts-set))]
-    (doseq [fetch-fn fetch-fns]
-      (future
-        (let [a (agent min-interval)]
-          (send-off a (backoff-fn a #(update-posts posts (fetch-fn)))))))
-    posts))
+(defn fetch-posts [posts fetch-fns]
+  (doseq [fetch-fn fetch-fns]
+    (future
+      (let [a (agent min-interval)]
+        (send-off a (backoff-fn a #(update-posts posts (fetch-fn))))))))
 
 (defn example []
-  (def ps (fetch-posts [#(s/twitter "fogus") #(s/twitter "djspiewak") s/hackernews]))
+  (def ps (ref (p/posts-set)))
+  (fetch-posts ps [#(s/twitter "fogus") #(s/twitter "djspiewak") s/hackernews])
 
   (map :title @ps))
 
