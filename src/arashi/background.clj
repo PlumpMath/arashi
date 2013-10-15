@@ -20,7 +20,7 @@ Uses a backoff to check non-frequently updated sources less often."
          updated-posts (p/join posts new-posts)]
      (ref-set posts-ref updated-posts)
 
-     (if (= (count posts) (count updated-posts))
+     (if (= (map :title posts) (map :title updated-posts))
        backoff-inc
        backoff-dec))))
 
