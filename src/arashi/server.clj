@@ -17,7 +17,8 @@
 (def sources
   {:twitter ["fogus" "djspiewak" "bodil" "richhickey" "stuarthalloway"]})
 
-(bg/fetch-posts posts (concat [src/hackernews] (map #(fn [] (src/twitter %)) (:twitter sources))))
+(defonce bg-fetching
+  (bg/fetch-posts posts (concat [src/hackernews] (map #(fn [] (src/twitter %)) (:twitter sources)))))
 
 (defroutes app
   (GET "/" []
