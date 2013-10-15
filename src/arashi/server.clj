@@ -6,7 +6,8 @@
 
   (:require [arashi.posts :as posts]
             [arashi.sources :as src]
-            [arashi.background :as bg])
+            [arashi.background :as bg]
+            [arashi.render :as r] :reload)
 
   (:import java.util.Date
            org.ocpsoft.prettytime.PrettyTime))
@@ -18,18 +19,9 @@
 
 (bg/fetch-posts posts (concat [src/hackernews] (map #(fn [] (src/twitter %)) (:twitter sources))))
 
-(defn render-post [{:keys [title url timestamp]}]
-  [:article.post
-   [:a {:href url} [:h1 title]]
-   [:span.timestamp "(" (.format (PrettyTime.) (or timestamp (Date.))) ")"]])
-
-(defn list-posts [posts]
-  (html (for [post posts]
-          (render-post post))))
-
 (defroutes app
   (GET "/" []
-       (list-posts (reverse @posts)))
+       (apply str (r/posts-tmpl (reverse @posts))))
   (POST "/superfeedr" req
         (prn (-> req :body slurp))
         "ok"))
