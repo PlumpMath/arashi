@@ -15,6 +15,15 @@ Currently, HackerNews and Twitter are supported."
       nil
       (java.util.Date. (* 1000 (.getBegin dates))))))
 
+(defn resolve-url [base-url url]
+  (let [base-uri (java.net.URI. base-url)
+        uri (java.net.URI. url)]
+    (str (if (.isAbsolute uri)
+           uri
+           (.resolve base-uri (if (.startsWith url "/")
+                                url
+                                (str "/" url)))))))
+
 (defn hackernews []
   (let [frontpage-html (fetch-html "https://news.ycombinator.com")
         titles (html/select frontpage-html [:td.title :a])
@@ -22,7 +31,7 @@ Currently, HackerNews and Twitter are supported."
         times-ago (html/select more-infos [(html/text-pred #(.contains % "ago"))])
         users-and-comments (html/select more-infos [:a])]
     (map (fn [title [user comments] time-ago]
-           {:url (get-in title [:attrs :href])
+           {:url (resolve-url "https://news.ycombinator.com" (get-in title [:attrs :href]))
             :title (html/text title)
             :timestamp (parse-date time-ago)
             :author (str "https://news.ycombinator.com/" (get-in user [:attrs :href]))
