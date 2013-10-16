@@ -28,7 +28,7 @@ Uses a backoff to check non-frequently updated sources less often."
   (fn backoff-fn* [interval]
     (let [change-fn (f)]
       (send-off a backoff-fn*)
-      (println interval)
+      (println interval (str f) (str change-fn))
       (Thread/sleep (* 1000 interval))
       (change-fn interval))))
 
