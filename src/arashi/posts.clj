@@ -11,4 +11,8 @@
   (apply conj old (filter #(new? old %) new)))
 
 (defn posts-set []
-  (sorted-set-by #(compare (:timestamp %1) (:timestamp %2))))
+  (sorted-set-by (fn [p1 p2]
+                   (let [tc (compare (:timestamp p1) (:timestamp p2))]
+                     (if (= tc 0)
+                       (compare (:url p1) (:url p2))
+                       tc)))))
