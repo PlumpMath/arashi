@@ -101,9 +101,9 @@ Currently, HackerNews and Twitter are supported."
 (defn feed [url]
   (let [feed-url (find-feed-at url)
         feed (feed/parse-feed feed-url)]
-    (map (fn [{:keys [link title authors published-date]}]
+    (map (fn [{:keys [link title authors published-date updated-date]}]
            {:url link
             :title title
             :author (-> authors first :name)
-            :timestamp published-date})
+            :timestamp (or published-date updated-date)})
          (:entries feed))))
