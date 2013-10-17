@@ -11,8 +11,8 @@ Uses a backoff to check non-frequently updated sources less often."
 (defn backoff-inc [n]
   (min (* n 2) max-interval))
 
-(defn backoff-dec [n]
-  (max (/ n 2) min-interval))
+(def backoff-reset
+  (constantly min-interval))
 
 (defn update-posts [posts-ref new-posts]
   (dosync
@@ -22,7 +22,7 @@ Uses a backoff to check non-frequently updated sources less often."
 
      (if (= (map :title posts) (map :title updated-posts))
        backoff-inc
-       backoff-dec))))
+       backoff-reset))))
 
 (defn backoff-fn [a f] ; maybe use timing thread (dates, not intervals) that spawns tasks?
   (fn backoff-fn* [interval]
