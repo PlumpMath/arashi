@@ -45,6 +45,9 @@
   (GET "/status" []
        (-> (resp/response (prn-str (map pretty-agent @bg-fetching)))
            (resp/content-type "text/plain")))
+  (GET "/posts.edn" []
+       (-> (resp/response (prn-str (reverse @posts)))
+           (resp/content-type "text/plain")))
   (POST "/superfeedr" req
         (prn (-> req :body slurp))
         "ok"))
