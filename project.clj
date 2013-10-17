@@ -11,4 +11,5 @@
                  [enlive "1.1.4"]
                  [com.rubiconproject.oss/jchronic "0.2.6"]]
   :plugins [[lein-ring "0.8.7"]]
-  :ring {:handler arashi.server/app})
+  :ring {:handler arashi.server/app
+         :nrepl {:start? true}})
