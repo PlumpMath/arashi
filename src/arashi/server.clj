@@ -1,6 +1,7 @@
 (ns arashi.server
   (:use ring.adapter.jetty)
   (:use compojure.core)
+  (:require [ring.util.response :as resp])
 
   (:use hiccup.core)
 
@@ -33,9 +34,17 @@
                                 (map #(fn [] (src/twitter %)) (:twitter sources))
                                 (map #(fn [] (src/feed %)) (:feed sources)))))
 
+(defn pretty-agent [a]
+  (if-let [err (agent-error a)]
+    err
+    a))
+
 (defroutes app
   (GET "/" []
        (apply str (r/posts-tmpl (reverse @posts))))
+  (GET "/status" []
+       (-> (resp/response (prn-str (map pretty-agent @bg-fetching)))
+           (resp/content-type "text/plain")))
   (POST "/superfeedr" req
         (prn (-> req :body slurp))
         "ok"))
