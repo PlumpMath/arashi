@@ -12,8 +12,6 @@
   (:import java.util.Date
            org.ocpsoft.prettytime.PrettyTime))
 
-(def posts (ref (posts/posts-set)))
-
 (def default-config
   {:sources
    {:twitter ["fogus" "djspiewak" "bodil" "richhickey" "stuarthalloway"]
@@ -27,6 +25,8 @@
 
 (def sources
   (:sources (read-config)))
+
+(defonce posts (ref (posts/posts-set)))
 
 (defonce bg-fetching
   (bg/fetch-posts posts (concat [src/hackernews]
