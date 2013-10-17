@@ -11,7 +11,6 @@
                  [enlive "1.1.4"]
                  [com.rubiconproject.oss/jchronic "0.2.6"]]
   :plugins [[lein-ring "0.8.7"]]
-  :repl-options {:port 30583}
   :ring {:handler arashi.server/app
          :nrepl {:start? true
                  :port 30583}})
