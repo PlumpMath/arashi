@@ -8,7 +8,10 @@
   (not-any? #(= (:url post) (:url %)) posts))
 
 (defn join [old new] ; old could just be a (sorted-)set
-  (apply conj old (filter #(new? old %) new)))
+  (let [new (filter #(new? old %) new)]
+    (if (empty? new)
+      old
+      (apply conj old new))))
 
 (defn posts-set []
   (sorted-set-by (fn [p1 p2]
