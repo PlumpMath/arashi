@@ -32,11 +32,13 @@ Uses a backoff to check non-frequently updated sources less often."
       (Thread/sleep (* 1000 interval))
       (change-fn interval))))
 
-
 (defn fetch-posts [posts fetch-fns]
-  (doseq [fetch-fn fetch-fns]
-    (let [a (agent min-interval)]
-      (send-off a (backoff-fn a #(update-posts posts (fetch-fn)))))))
+  (let [as (atom [])]
+    (doseq [fetch-fn fetch-fns]
+      (let [a (agent min-interval)]
+        (send-off a (backoff-fn a #(update-posts posts (fetch-fn))))
+        (swap! as conj a)))
+    as))
 
 (defn example []
   (def ps (ref (p/posts-set)))
