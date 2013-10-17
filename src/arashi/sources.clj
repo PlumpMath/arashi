@@ -80,6 +80,29 @@ Currently, HackerNews and Twitter are supported."
 (defn twitter-post? [post]
   (.contains (:url post) "twitter.com/"))
 
+(defn pg-essay [url]
+  (let [page-html (fetch-html url)
+        essay-html (html/select page-html [:table [:td (html/nth-of-type 3)] :table])
+        title (-> (html/select essay-html [[:img (html/attr? :alt)]]) first :attrs :alt)
+        [_ month year] (re-find #"(\w+)? ?(\d{4})" (apply str (html/texts essay-html)))]
+    {:url url
+     :title title
+     :timestamp (if (or month year)
+                  (parse-date (str 1 " " (or month "January") " " year))
+                  nil)}))
+
+(defn pg-essays []
+  (let [list-url "http://paulgraham.com/articles.html"
+        list-html (fetch-html list-url)
+        article-links (html/select list-html [:td [:table (html/nth-of-type 2)] [:a (html/attr-ends :href "html")]])
+        articles (pmap #(->> % :attrs :href (resolve-url list-url) pg-essay) article-links)]
+    (second (reduce (fn [[d as] {t :timestamp :as a}]
+                      (if t
+                        [t (conj as a)]
+                        [d (conj as (assoc a :timestamp d))]))
+                    [(java.util.Date.) []]
+                    articles))))
+
 (defn find-feed-html [url]
   (let [html (fetch-html url)
         alternates (html/select html [[:link (html/attr-contains :rel "alternate") (html/attr-contains :type "xml")]])]

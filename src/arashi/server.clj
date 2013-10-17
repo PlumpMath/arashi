@@ -29,7 +29,7 @@
 (defonce posts (ref (posts/posts-set)))
 
 (defonce bg-fetching
-  (bg/fetch-posts posts (concat [src/hackernews]
+  (bg/fetch-posts posts (concat [src/hackernews src/pg-essays]
                                 (map #(fn [] (src/twitter %)) (:twitter sources))
                                 (map #(fn [] (src/feed %)) (:feed sources)))))
 
