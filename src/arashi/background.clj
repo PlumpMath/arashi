@@ -24,7 +24,7 @@ Uses a backoff to check non-frequently updated sources less often."
        backoff-inc
        backoff-dec))))
 
-(defn backoff-fn [a f]
+(defn backoff-fn [a f] ; maybe use timing thread (dates, not intervals) that spawns tasks?
   (fn backoff-fn* [interval]
     (let [change-fn (f)]
       (send-off a backoff-fn*)
