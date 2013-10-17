@@ -49,10 +49,11 @@ Currently, HackerNews and Twitter are supported."
       nil)))
 
 (defn parse-twitter-date [date]
-  (let [short-date (re-find #"(\d+)(m|h|d)" date)]
+  (let [short-date (re-find #"(\d+)(s|m|h|d)" date)]
     (if short-date
       (let [[_ n suffix] short-date
             expanded-suffix (condp = suffix
+                              "s" "seconds"
                               "m" "minutes"
                               "h" "hours"
                               "d" "days")]
