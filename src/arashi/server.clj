@@ -15,10 +15,14 @@
 (def posts (ref (posts/posts-set)))
 
 (def sources
-  {:twitter ["fogus" "djspiewak" "bodil" "richhickey" "stuarthalloway"]})
+  {:twitter ["fogus" "djspiewak" "bodil" "richhickey" "stuarthalloway"]
+   :feed ["http://prog21.dadgum.com" "https://github.com/blog/all.atom" "http://codinghorror.com"
+          "http://waxy.org/links"]})
 
 (defonce bg-fetching
-  (bg/fetch-posts posts (concat [src/hackernews] (map #(fn [] (src/twitter %)) (:twitter sources)))))
+  (bg/fetch-posts posts (concat [src/hackernews]
+                                (map #(fn [] (src/twitter %)) (:twitter sources))
+                                (map #(fn [] (src/feed %)) (:feed sources)))))
 
 (defroutes app
   (GET "/" []
