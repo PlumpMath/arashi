@@ -5,13 +5,29 @@
     "i_am_prometheus" "worrydream"
    ]
    :feed [
+     ; tech
      "http://prog21.dadgum.com"
      "https://github.com/blog/all.atom"
      "http://codinghorror.com"
-     "http://waxy.org/links"
      "http://zachholman.com"
 
+     "http://waxy.org/links"
+
+     ;; planet.clojure.in, planet.haskell.org, planet.gnome.org?
+
+     "http://youtube.com/user/vihart"
+     "http://youtube.com/user/1veritasium"
+     "http://youtube.com/user/LimitTheory"
+     "http://forums.ltheory.com/feed.php?f=12"
+
+     ; local
+     "http://heldenstadt.de"
+     "http://enemenemuh.blogspot.de"
+     "http://thatgirlthere.wordpress.com"
+
+     ; comics & artists
      "http://gingerhaze.com/nimona/rss.xml"
+     "http://questionablecontent.net/QCRSS.xml"
      "http://xkcd.com"
      "http://what-if.xkcd.com"
      "http://empartridge.tumblr.com"
