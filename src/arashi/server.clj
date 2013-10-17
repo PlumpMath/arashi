@@ -14,10 +14,19 @@
 
 (def posts (ref (posts/posts-set)))
 
+(def default-config
+  {:sources
+   {:twitter ["fogus" "djspiewak" "bodil" "richhickey" "stuarthalloway"]
+    :feed ["http://prog21.dadgum.com" "https://github.com/blog/all.atom" "http://codinghorror.com"
+           "http://waxy.org/links"]}})
+
+(defn read-config []
+  (if (.exists (java.io.File. "config.edn"))
+    (-> "config.edn" slurp clojure.tools.reader.edn/read-string)
+    default-config))
+
 (def sources
-  {:twitter ["fogus" "djspiewak" "bodil" "richhickey" "stuarthalloway"]
-   :feed ["http://prog21.dadgum.com" "https://github.com/blog/all.atom" "http://codinghorror.com"
-          "http://waxy.org/links"]})
+  (:sources (read-config)))
 
 (defonce bg-fetching
   (bg/fetch-posts posts (concat [src/hackernews]

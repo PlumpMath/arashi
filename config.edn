@@ -1,0 +1,22 @@
+{:sources
+  {:twitter [
+    "fogus" "djspiewak" "bodil" "richhickey" "stuarthalloway" "kotarak" "sigfpe"
+    "JenniferDewalt" "LeaVerou"
+    "i_am_prometheus" "worrydream"
+   ]
+   :feed [
+     "http://prog21.dadgum.com"
+     "https://github.com/blog/all.atom"
+     "http://codinghorror.com"
+     "http://waxy.org/links"
+     "http://zachholman.com"
+
+     "http://gingerhaze.com/nimona/rss.xml"
+     "http://xkcd.com"
+     "http://what-if.xkcd.com"
+     "http://empartridge.tumblr.com"
+     "http://firefluff.tumblr.com"
+     "http://firefluffart.tumblr.com"
+     "http://pythias.tumblr.com"
+     "http://jephjacques.tumblr.com"
+   ]}}
