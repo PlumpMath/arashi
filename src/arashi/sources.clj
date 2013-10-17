@@ -2,7 +2,9 @@
   "Datasources for various services that don't provide RSS/ATOM feeds.
 
 Currently, HackerNews and Twitter are supported."
-  (:require [net.cgrand.enlive-html :as html])
+  (:require [net.cgrand.enlive-html :as html]
+            [clj-http.client :as http]
+            [feedparser-clj.core :as feed])
 
   (:import java.util.Calendar))
 
@@ -77,3 +79,31 @@ Currently, HackerNews and Twitter are supported."
 
 (defn twitter-post? [post]
   (.contains (:url post) "twitter.com/"))
+
+(defn find-feed-html [url]
+  (let [html (fetch-html url)
+        alternates (html/select html [[:link (html/attr-contains :rel "alternate")]])]
+    (if alternates
+      (->> alternates
+           first
+           :attrs
+           :href
+           (resolve-url url))
+      nil)))
+
+(defn find-feed-at [url]
+  ; fetch feed, if it's html, try to discover atom/rss via <link rel=alternate> sniffing
+  (let [head (http/head url)]
+    (if (.contains (get-in head [:headers "content-type"]) "xml")
+      (last (:trace-redirects head))
+      (find-feed-html url))))
+
+(defn feed [url]
+  (let [feed-url (find-feed-at url)
+        feed (feed/parse-feed feed-url)]
+    (map (fn [{:keys [link title authors published-date]}]
+           {:url link
+            :title title
+            :author (-> authors first :name)
+            :timestamp published-date})
+         (:entries feed))))
