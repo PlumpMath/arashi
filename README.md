@@ -43,7 +43,7 @@ but rather creating something.
 * filter links (by source, by title matching, by date range)
 * be extensible via ClojureScript (e.g. custom filters)
 * detect "trends" using fancy algorithms
-* persist entries to a database (e.g. datomic)
+* persist posts to a database (e.g. datomic)
 
 ## How to use it?
 
