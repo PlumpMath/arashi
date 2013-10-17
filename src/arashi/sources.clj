@@ -82,7 +82,7 @@ Currently, HackerNews and Twitter are supported."
 
 (defn find-feed-html [url]
   (let [html (fetch-html url)
-        alternates (html/select html [[:link (html/attr-contains :rel "alternate")]])]
+        alternates (html/select html [[:link (html/attr-contains :rel "alternate") (html/attr-contains :type "xml")]])]
     (if alternates
       (->> alternates
            first
