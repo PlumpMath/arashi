@@ -33,7 +33,7 @@ Currently, HackerNews and Twitter are supported."
     (map (fn [title [user comments] time-ago]
            {:url (resolve-url "https://news.ycombinator.com" (get-in title [:attrs :href]))
             :title (html/text title)
-            :timestamp (parse-date time-ago)
+            :timestamp (parse-date time-ago) ; maybe use current date?
             :author (str "https://news.ycombinator.com/" (get-in user [:attrs :href]))
             :comments (str "https://news.ycombinator.com/" (get-in comments [:attrs :href]))})
          titles (partition 2 users-and-comments) times-ago)))
