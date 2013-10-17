@@ -18,6 +18,21 @@ experimental):
 
 Fetches less frequently if the source doesn't change.
 
+## What does it want to do?
+
+Give you (me) more time to spend creating things, not checking all the
+things you could check. You check one thing, and that's it.
+
+What's missing: Some incentive to spend less time on this giant list.
+This could be rate-limiting or something more interesting like
+"ignoring" links and filters.
+
+You could also put all your sources in here and then check back every
+few days without worrying of missing something.
+
+Or you could take the sane route and not worry about "missing something"
+but rather creating something.
+
 ## What could it do?
 
 * track which links you clicked
