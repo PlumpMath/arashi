@@ -26,8 +26,8 @@ Uses a backoff to check non-frequently updated sources less often."
 
 (defn backoff-fn [a f] ; maybe use timing thread (dates, not intervals) that spawns tasks?
   (fn backoff-fn* [{:keys [interval] :as fetch-state}]
+    (send-off a backoff-fn*)
     (let [change-fn (f)]
-      (send-off a backoff-fn*)
       (println interval (str f) (str change-fn))
       (Thread/sleep (* 1000 interval))
       (assoc (dissoc fetch-state :error :last-error-t)
