@@ -24,15 +24,20 @@
     (-> "config.edn" slurp clojure.tools.reader.edn/read-string)
     default-config))
 
+(defn expand-sources [sources]
+  (if (map? sources)
+    (mapcat (fn [[k v]]
+              (map #(array-map :source k (key-name k) %) v))
+            sources)
+    sources))
+
 (def sources
-  (:sources (read-config)))
+  (-> (read-config) :sources expand-sources))
 
 (defonce posts (ref (posts/posts-set)))
 
 (defonce bg-fetching
-  (bg/fetch-posts posts (concat [src/hackernews src/pg-essays]
-                                (map #(fn [] (src/twitter %)) (:twitter sources))
-                                (map #(fn [] (src/feed %)) (:feed sources)))))
+  (bg/fetch-posts posts (map src/fetch-from sources)))
 
 (defn pretty-agent [a]
   (if-let [err (agent-error a)]
