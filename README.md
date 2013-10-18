@@ -52,6 +52,21 @@ but rather creating something.
 
         $ java -jar arashi-v0.0-alpha.jar
 
+Or run it locally:
+
+    # Install rome (for atom/rss parsing)
+    $ git clone git://github.com/rometools/rome
+    $ cd rome
+    $ mvn install
+
+    # Start it locally
+    $ git clone git://github.com/heyLu/arashi
+    $ cd arashi
+    $ lein ring server-headless
+
+    # You can also connect a repl to the running server
+    $ lein repl :connect 30583
+
 If you want to use different feeds than the default ones, put a
 file name `config.edn` into the same directory you start `arashi`
 from (here's [the one i use][config]).
