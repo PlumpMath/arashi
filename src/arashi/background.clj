@@ -30,7 +30,9 @@ Uses a backoff to check non-frequently updated sources less often."
       (send-off a backoff-fn*)
       (println interval (str f) (str change-fn))
       (Thread/sleep (* 1000 interval))
-      (update-in fetch-state [:interval] change-fn))))
+      (assoc (dissoc fetch-state :error :last-error-t)
+        :interval (change-fn interval)
+        :last-fetch-t (java.util.Date.)))))
 
 (defn store-error [a error]
   (send a assoc
