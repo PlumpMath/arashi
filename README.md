@@ -68,7 +68,7 @@ Or run it locally:
     $ lein repl :connect 30583
 
 If you want to use different feeds than the default ones, put a
-file name `config.edn` into the same directory you start `arashi`
+file named `config.edn` in the same directory you start `arashi`
 from (here's [the one i use][config]).
 
 ## How to help
