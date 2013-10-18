@@ -32,10 +32,17 @@ Uses a backoff to check non-frequently updated sources less often."
       (Thread/sleep (* 1000 interval))
       (update-in fetch-state [:interval] change-fn))))
 
+(defn store-error [a error]
+  (send a assoc
+        :error error
+        :last-error-t (java.util.Date.)))
+
 (defn fetch-posts [posts fetch-infos]
   (let [as (atom [])]
     (doseq [{:keys [fetch-fn] :as fetch-info} fetch-infos]
-      (let [a (agent (assoc fetch-info :interval min-interval))]
+      (let [a (agent (assoc fetch-info :interval min-interval)
+                     :error-mode :continue
+                     :error-handler store-error)]
         (send-off a (backoff-fn a #(update-posts posts (fetch-fn))))
         (swap! as conj a)))
     as))
