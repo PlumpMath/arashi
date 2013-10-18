@@ -15,7 +15,8 @@
 
 (def default-config
   {:sources
-   {:twitter ["fogus" "djspiewak" "bodil" "richhickey" "stuarthalloway"]
+   {:hackernews ["hn"]
+    :twitter ["fogus" "djspiewak" "bodil" "richhickey" "stuarthalloway"]
     :feed ["http://prog21.dadgum.com" "https://github.com/blog/all.atom" "http://codinghorror.com"
            "http://waxy.org/links"]}})
 

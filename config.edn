@@ -1,5 +1,7 @@
 {:sources
-  {:twitter [
+  {:hackernews ["hn"]
+   :paulgraham ["pg"]
+   :twitter [
     "fogus" "djspiewak" "bodil" "richhickey" "stuarthalloway" "kotarak" "sigfpe"
     "JenniferDewalt" "LeaVerou"
     "i_am_prometheus" "worrydream"
