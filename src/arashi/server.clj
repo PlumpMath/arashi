@@ -28,7 +28,7 @@
 (defn expand-sources [sources]
   (if (map? sources)
     (mapcat (fn [[k v]]
-              (map #(array-map :source k (key-name k) %) v))
+              (map #(array-map :source k (src/source-key k) %) v))
             sources)
     sources))
 
