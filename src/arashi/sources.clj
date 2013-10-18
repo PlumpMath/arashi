@@ -130,3 +130,24 @@ Currently, HackerNews and Twitter are supported."
             :author (-> authors first :name)
             :timestamp (or published-date updated-date)})
          (:entries feed))))
+
+(defn source-key [source]
+  (case source
+    :hackernews :_
+    :twitter :user-name
+    :feed :url
+    :paulgraham :_))
+
+(defmulti fetch-from :source)
+
+(defmethod fetch-from :hackernews [_]
+  (hackernews))
+
+(defmethod fetch-from :twitter [{:keys [user-name]}]
+  (twitter user-name))
+
+(defmethod fetch-from :feed [{:keys [url]}]
+  (feed url))
+
+(defmethod fetch-from :paulgraham [_]
+  (pg-essays))
