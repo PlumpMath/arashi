@@ -140,14 +140,18 @@ Currently, HackerNews and Twitter are supported."
 
 (defmulti fetch-from :source)
 
-(defmethod fetch-from :hackernews [_]
-  (hackernews))
+(defmethod fetch-from :hackernews [m]
+  (assoc m
+    :fetch-fn hackernews))
 
-(defmethod fetch-from :twitter [{:keys [user-name]}]
-  (twitter user-name))
+(defmethod fetch-from :twitter [{:keys [user-name] :as m}]
+  (assoc m
+    :fetch-fn (partial twitter user-name)))
 
-(defmethod fetch-from :feed [{:keys [url]}]
-  (feed url))
+(defmethod fetch-from :feed [{:keys [url] :as m}]
+  (assoc m
+    :fetch-fn (partial feed url)))
 
-(defmethod fetch-from :paulgraham [_]
-  (pg-essays))
+(defmethod fetch-from :paulgraham [m]
+  (assoc m
+    :fetch-fn (partial pg-essays)))
