@@ -14,9 +14,12 @@
   (:import java.util.Date
            org.ocpsoft.prettytime.PrettyTime))
 
+(defn read-edn [filename]
+  (-> filename slurp clojure.tools.reader.edn/read-string))
+
 (defn read-config []
   (let [config-file (or (System/getProperty "arashi.config.path") "config.edn")]
-    (-> config-file slurp clojure.tools.reader.edn/read-string)))
+    (read-edn config-file)))
 
 (defn expand-sources [sources]
   (if (map? sources)
@@ -28,7 +31,11 @@
 (def sources
   (-> (read-config) :sources expand-sources))
 
-(defonce posts (ref (posts/posts-set)))
+(defonce posts
+  (ref (posts/join (posts/posts-set)
+                   (if (.exists (java.io.File. "all_posts.edn"))
+                     (read-edn "all_posts.edn")
+                     []))))
 
 (defn save-posts-agent []
   (let [a (agent {:type :save-posts
