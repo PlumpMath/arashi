@@ -14,17 +14,9 @@
   (:import java.util.Date
            org.ocpsoft.prettytime.PrettyTime))
 
-(def default-config
-  {:sources
-   {:hackernews ["hn"]
-    :twitter ["fogus" "djspiewak" "bodil" "richhickey" "stuarthalloway"]
-    :feed ["http://prog21.dadgum.com" "https://github.com/blog/all.atom" "http://codinghorror.com"
-           "http://waxy.org/links"]}})
-
 (defn read-config []
-  (if (.exists (java.io.File. "config.edn"))
-    (-> "config.edn" slurp clojure.tools.reader.edn/read-string)
-    default-config))
+  (let [config-file (or (System/getProperty "arashi.config.path") "config.edn")]
+    (-> config-file slurp clojure.tools.reader.edn/read-string)))
 
 (defn expand-sources [sources]
   (if (map? sources)
