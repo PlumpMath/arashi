@@ -33,11 +33,6 @@
 (defonce bg-fetching
   (bg/fetch-posts posts (map src/fetch-from sources)))
 
-(defn pretty-agent [a]
-  (if-let [err (agent-error a)]
-    err
-    a))
-
 (defn pp-str [obj]
   (let [w (java.io.StringWriter.)]
     (clojure.pprint/pprint obj w)
