@@ -30,8 +30,19 @@
 
 (defonce posts (ref (posts/posts-set)))
 
+(defn save-posts-agent []
+  (let [a (agent {:type :save-posts
+                  :interval (* 10 60)})]
+    (send-off a (bg/backoff-fn a (fn []
+                                   (with-open [f (clojure.java.io/writer "all_posts.edn")]
+                                     (.write f (prn-str @posts)))
+                                   identity)))
+    a))
+
 (defonce bg-fetching
-  (bg/fetch-posts posts (map src/fetch-from sources)))
+  (let [bg-fetchers (bg/fetch-posts posts (map src/fetch-from sources))]
+    (swap! bg-fetchers conj (save-posts-agent))
+    bg-fetchers))
 
 (defn pp-str [obj]
   (let [w (java.io.StringWriter.)]

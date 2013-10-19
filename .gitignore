@@ -1,3 +1,5 @@
 /target
 .lein*
 .nrepl-port
+
+all_posts.edn
