@@ -38,7 +38,7 @@ Currently, HackerNews and Twitter are supported."
             :timestamp (java.util.Date.)
             :posted-timestamp (parse-date time-ago)
             :author (str "https://news.ycombinator.com/" (get-in user [:attrs :href]))
-            :comments (str "https://news.ycombinator.com/" (get-in comments [:attrs :href]))})
+            :via (str "https://news.ycombinator.com/" (get-in comments [:attrs :href]))})
          titles (partition 2 users-and-comments) times-ago)))
 
 (defn hackernews-post? [post]
@@ -73,6 +73,7 @@ Currently, HackerNews and Twitter are supported."
     (map (fn [content user url timestamp]
            {:url url
             :author user
+            :via (str "https://twitter.com/" username)
             :timestamp (parse-twitter-date (.trim timestamp))
             :title content})
          contents users urls timestamps)))
@@ -87,6 +88,7 @@ Currently, HackerNews and Twitter are supported."
         [_ month year] (re-find #"(\w+)? ?(\d{4})" (apply str (html/texts essay-html)))]
     {:url url
      :title title
+     :via "http://paulgraham.com/articles.html"
      :timestamp (if (or month year)
                   (parse-date (str 1 " " (or month "January") " " year))
                   nil)}))
@@ -128,6 +130,7 @@ Currently, HackerNews and Twitter are supported."
            {:url link
             :title title
             :author (-> authors first :name)
+            :via url
             :timestamp (or published-date updated-date)})
          (:entries feed))))
 
