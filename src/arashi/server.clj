@@ -6,6 +6,7 @@
 
   (:use hiccup.core)
 
+  (:require [lookalike.server :as lookalike])
   (:require [arashi.posts :as posts]
             [arashi.sources :as src]
             [arashi.background :as bg]
@@ -68,7 +69,9 @@
            (resp/content-type "text/plain")))
   (POST "/superfeedr" req
         (prn (-> req :body slurp))
-        "ok"))
+        "ok")
+  (context "/lookalike" []
+           lookalike/app-routes))
 
 (defn pretty-print-edn [handler]
   (fn [req]

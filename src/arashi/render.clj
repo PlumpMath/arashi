@@ -14,7 +14,7 @@
         (html/content title)
         (html/set-attr :href url))
   [:.timestamp] (html/content  (str "(" (.format (PrettyTime.) (or timestamp (Date.))) ")"))
-  [:.icon] (html/set-attr :src (str (root-url url) "/favicon.ico"))
+  [:.icon] (html/set-attr :src (str "/lookalike/favicon?url=" (root-url url)))
   [:.via :a] (html/do->
               (html/content (-> (or via url) (java.net.URL.) .getHost))
               (html/set-attr :href (or via url))))

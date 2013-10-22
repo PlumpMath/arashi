@@ -6,6 +6,7 @@
                  [ring "1.2.0"]
                  [hiccup "1.0.4"]
                  [org.ocpsoft.prettytime/prettytime "3.1.0.Final"]
+                 [lookalike "0.0-SNAPSHOT"]
 
                  ; scraping
                  ; `mvn install` locally from github.com/rometools/rome: [com.rometools/rome "???"]
