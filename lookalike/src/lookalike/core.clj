@@ -6,6 +6,15 @@
 (defn select-favicon [html]
   (html/select html [[:link (html/attr-has :rel "icon")]]))
 
+(defn resolve-url [base-url url]
+  (let [base-uri (java.net.URI. base-url)
+        uri (java.net.URI. url)]
+    (str (if (.isAbsolute uri)
+           uri
+           (.resolve base-uri (if (.startsWith url "/")
+                                url
+                                (str "/" url)))))))
+
 (defn root-url [url]
   (let [url (java.net.URL. url)]
     (str (.getProtocol url) "://" (.getHost url))))
@@ -19,4 +28,6 @@ the page. If that fails it returns `\"[scheme]://[host]/favicon.ico\"`.
 E.g. `(favicon-of \"http://paulgraham.com\")` ;=> \"http://ycombinator.com/arc/arc.png\""
   (let [html (html/html-resource (java.net.URL. url))
         favicon (first (select-favicon html))]
-    (or (get-in favicon [:attrs :href]) (str (root-url url) "/favicon.ico"))))
+    (resolve-url url
+                 (or (get-in favicon [:attrs :href])
+                     (str (root-url url) "/favicon.ico")))))
