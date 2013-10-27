@@ -1,6 +1,7 @@
 (ns arashi.render
   (:use [net.cgrand.enlive-html :only [deftemplate defsnippet html]])
-  (:require [net.cgrand.enlive-html :as html])
+  (:require [clojure.string :as str]
+            [net.cgrand.enlive-html :as html])
   (:import org.ocpsoft.prettytime.PrettyTime
            java.util.Date))
 
@@ -10,6 +11,7 @@
 
 (defsnippet post-tmpl "arashi/posts.html" [:#posts [:.post (html/nth-of-type 1)]]
   [{:keys [title url via timestamp]}]
+  html/this-node (html/set-attr :class (str "post" " " (str/replace (.getHost (java.net.URL. (or via url))) #"\." "-")))
   [:a] (html/do->
         (html/content title)
         (html/set-attr :href url))

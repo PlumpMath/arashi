@@ -9,11 +9,31 @@
 		.via { visibility: hidden }
 		.post:hover .via { visibility: visible }
 	</style>
+	<style id="custom-style" type="text/css">
+	</style>
 </head>
 
 <body>
+	<input id="filter" type="text" size="80" placeholder="waxy.org xkcd.com" />
+	<script type="text/javascript">
+		var s = document.querySelector("#custom-style");
+		var i = document.querySelector("#filter");
+		i.onkeydown = function(ev) {
+			console.log(ev);
+			if (ev.ctrlKey && ev.keyCode == 13) {
+				if (i.value == "") {
+					s.textContent = "";
+				} else {
+					var filterSelector = i.value.replace(/\s+/g, ", ").replace(/[\w\.]+/g, function(url) {
+						return "." + url.replace(/\./g, "-");
+					});
+					s.textContent = ".post { display: none }\n" + filterSelector + " { display: inherit }";
+				}
+			}
+		};
+	</script>
 	<section id="posts">
-		<article class="post hackernews">
+		<article class="post news-ycombinator-com">
 			<img class="icon" src="http://news.ycombinator.com/favicon.ico" />
 			<a href="http://mathgifs.blogspot.co.uk/">MathGifs</a>
 			<time class="timestamp">1 hour ago</time>
@@ -22,7 +42,7 @@
 			</span>
 		</article>
 
-		<article class="post twitter">
+		<article class="post twitter-com">
 			<img class="icon" src="http://twitter.com/favicon.ico" />
 			<a href="https://twitter.com/fogus/status/390141802134519808">
 				I have a great title to a paper -- "A Little Further Out of the Tarpit" -- I wonder what it would be about.
@@ -33,7 +53,7 @@
 			</span>
 		</article>
 
-		<article class="post">
+		<article class="post waxy-org">
 			<img class="icon" src="http://waxy.org/favicon.ico" />
 			<a href="https://www.eff.org/deeplinks/2013/10/lowering-your-standards">
 				EFF on the W3C's decision to add DRM to the HTML spec — well, there's always the WHATWG's living standard
