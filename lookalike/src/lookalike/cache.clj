@@ -3,4 +3,4 @@
   (:require [clojure.core.memoize :as memo]
             [lookalike.core :as lookalike]))
 
-(def favicon-of (memo/lru lookalike/favicon-of :lru/threshold 1000))
+(def favicon-of (memo/lru lookalike/save-favicon-of :lru/threshold 1000))

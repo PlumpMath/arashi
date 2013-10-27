@@ -31,3 +31,9 @@ E.g. `(favicon-of \"http://paulgraham.com\")` ;=> \"http://ycombinator.com/arc/a
     (resolve-url url
                  (or (get-in favicon [:attrs :href])
                      (str (root-url url) "/favicon.ico")))))
+
+(defn save-favicon-of [url]
+  (try
+    (favicon-of url)
+    (catch Exception e
+      (str (root-url url) "/favicon.ico"))))
