@@ -18,17 +18,14 @@
 	<script type="text/javascript">
 		var s = document.querySelector("#custom-style");
 		var i = document.querySelector("#filter");
-		i.onkeydown = function(ev) {
-			console.log(ev);
-			if (ev.ctrlKey && ev.keyCode == 13) {
-				if (i.value == "") {
-					s.textContent = "";
-				} else {
-					var filterSelector = i.value.replace(/\s+/g, ", ").replace(/[\w\.]+/g, function(url) {
-						return "." + url.replace(/\./g, "-");
-					});
-					s.textContent = ".post { display: none }\n" + filterSelector + " { display: inherit }";
-				}
+		i.onkeyup = function(ev) {
+			if (i.value == "") {
+				s.textContent = "";
+			} else if (ev.keyCode == 13) {
+				var filterSelector = i.value.replace(/\s+/g, ", ").replace(/[\w\.]+/g, function(url) {
+					return "." + url.replace(/\./g, "-");
+				});
+				s.textContent = ".post { display: none }\n" + filterSelector + " { display: inherit }";
 			}
 		};
 	</script>
