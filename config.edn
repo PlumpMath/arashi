@@ -12,12 +12,20 @@
      "https://github.com/blog/all.atom"
      "http://codinghorror.com"
      "http://zachholman.com"
+     "http://chris-granger.com"
+     "http://swannodette.github.io"
+     "http://words.steveklabnik.com"
+     "http://blog.fogus.me"
+     "http://programmingisterrible.com"
+     "http://blog.jenniferdewalt.com"
+     "http://waxy.org"
 
      "http://chneukirchen.org/trivium"
      "http://waxy.org/links"
 
      ;; planet.clojure.in, planet.haskell.org, planet.gnome.org?
 
+     "http://vihart.com"
      "http://youtube.com/user/vihart"
      "http://youtube.com/user/1veritasium"
      "http://youtube.com/user/LimitTheory"
@@ -27,6 +35,7 @@
      "http://heldenstadt.de"
      "http://enemenemuh.blogspot.de"
      "http://thatgirlthere.wordpress.com"
+     "http://kleinerdrei.org"
 
      ; comics & artists
      "http://gingerhaze.com/nimona/rss.xml"
@@ -39,4 +48,6 @@
      "http://firefluffart.tumblr.com"
      "http://pythias.tumblr.com"
      "http://jephjacques.tumblr.com"
+
+     "http://freeindie.com"
    ]}}
