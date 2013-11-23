@@ -1,5 +1,5 @@
 {:sources
-  {:hackernews ["hn"]
+  {;:hackernews ["hn"]
    :paulgraham ["pg"]
    :twitter [
     "fogus" "djspiewak" "bodil" "richhickey" "stuarthalloway" "kotarak" "sigfpe"
@@ -16,6 +16,7 @@
      "http://swannodette.github.io"
      "http://words.steveklabnik.com"
      "http://blog.fogus.me"
+     "http://aphyr.com"
      "http://programmingisterrible.com"
      "http://blog.jenniferdewalt.com"
      "http://waxy.org"
