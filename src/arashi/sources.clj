@@ -64,7 +64,7 @@ Currently, HackerNews and Twitter are supported."
           (parse-date-with "dd MMM yy" (str date " " (-> (Calendar/getInstance) (.get Calendar/YEAR) .toString (subs 2))))))))
 
 (defn twitter [username]
-  (let [user-html (fetch-html (str "https://mobile.twitter.com/" username))
+  (let [user-html (fetch-html (str "https://twitter.com/" username))
         tweets (html/select user-html [:.tweet])
         contents (map html/text (html/select tweets [:.tweet-text]))
         users (map #(.trim (html/text %)) (html/select tweets [:.username]))
