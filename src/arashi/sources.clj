@@ -68,13 +68,13 @@ Currently, HackerNews and Twitter are supported."
         tweets (html/select user-html [:.tweet])
         contents (map html/text (html/select tweets [:.tweet-text]))
         users (map #(.trim (html/text %)) (html/select tweets [:.username]))
-        timestamps (map html/text (html/select tweets [:.timestamp]))
+        timestamps (html/select tweets [(html/attr? :data-time)])
         urls (map #(str "https://twitter.com/" (first (html/attr-values % :href))) tweets)]
     (map (fn [content user url timestamp]
            {:url url
             :author user
             :via (str "https://twitter.com/" username)
-            :timestamp (parse-twitter-date (.trim timestamp))
+            :timestamp (java.util.Date. (* (Long/parseLong (-> timestamp :attrs :data-time)) 1000))
             :title content})
          contents users urls timestamps)))
 
