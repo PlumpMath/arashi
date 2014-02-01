@@ -78,8 +78,9 @@
 (defroutes app-routes
   (GET "/" [start count q]
        (let [start (or (parse-int start) 0)
-             count (or (parse-int count) 500)]
-         (apply str (r/posts-tmpl (get-posts start count q)))))
+             count (or (parse-int count) 500)
+             search (or q "")]
+         (apply str (r/posts-tmpl (get-posts start count search)))))
   (GET "/status" []
        (-> (resp/response
             (reverse (sort-by (comp :last-error-t deref) @bg-fetching)))
