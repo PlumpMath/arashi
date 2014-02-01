@@ -63,11 +63,23 @@
     (catch NumberFormatException ne
       nil)))
 
+(defn filter-posts [s ps]
+  (filter #(or (.contains (:title %) s)
+               (.contains (:url %) s)) ps))
+
+(defn get-posts [start count search]
+  (->>
+    @posts
+    reverse
+    (filter-posts search)
+    (drop start)
+    (take count)))
+
 (defroutes app-routes
-  (GET "/" [start count]
+  (GET "/" [start count q]
        (let [start (or (parse-int start) 0)
              count (or (parse-int count) 500)]
-         (apply str (r/posts-tmpl (take count (drop start (reverse @posts)))))))
+         (apply str (r/posts-tmpl (get-posts start count q)))))
   (GET "/status" []
        (-> (resp/response
             (reverse (sort-by (comp :last-error-t deref) @bg-fetching)))
