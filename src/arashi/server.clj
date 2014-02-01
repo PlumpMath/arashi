@@ -57,9 +57,17 @@
     (clojure.pprint/pprint obj w)
     (.toString w)))
 
+(defn parse-int [s]
+  (try
+    (Integer/parseInt s)
+    (catch NumberFormatException ne
+      nil)))
+
 (defroutes app-routes
-  (GET "/" []
-       (apply str (r/posts-tmpl (reverse @posts))))
+  (GET "/" [start count]
+       (let [start (or (parse-int start) 0)
+             count (or (parse-int count) 500)]
+         (apply str (r/posts-tmpl (take count (drop start (reverse @posts)))))))
   (GET "/status" []
        (-> (resp/response
             (reverse (sort-by (comp :last-error-t deref) @bg-fetching)))
