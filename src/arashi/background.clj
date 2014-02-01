@@ -6,7 +6,7 @@ Uses a backoff to check non-frequently updated sources less often."
             [arashi.sources :as s]))
 
 (def min-interval (* 1 60))
-(def max-interval (* 1 24 60 60))
+(def max-interval (* 8 60 60))
 
 (defn backoff-inc [n]
   (min (* n 2) max-interval))
