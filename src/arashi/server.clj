@@ -47,10 +47,11 @@
                                    identity)))
     a))
 
-(defonce bg-fetching
-  (let [bg-fetchers (bg/fetch-posts posts (map src/fetch-from sources))]
-    (swap! bg-fetchers conj (save-posts-agent))
-    bg-fetchers))
+(defn init-fetchers []
+  (defonce bg-fetching
+    (let [bg-fetchers (bg/fetch-posts posts (map src/fetch-from sources))]
+      (swap! bg-fetchers conj (save-posts-agent))
+      bg-fetchers)))
 
 (defn pp-str [obj]
   (let [w (java.io.StringWriter.)]
