@@ -76,19 +76,24 @@
     (drop start)
     (take count)))
 
+(defn query-from-params [start count search]
+  (let [start (or (parse-int start) 0)
+        count (or (parse-int count) 500)
+        search (or search "")]
+    [start count search]))
+
 (defroutes app-routes
   (GET "/" [start count q]
-       (let [start (or (parse-int start) 0)
-             count (or (parse-int count) 500)
-             search (or q "")]
+       (let [[start count search] (query-from-params start count q)]
          (apply str (r/posts-tmpl (get-posts start count search)))))
   (GET "/status" []
        (-> (resp/response
             (reverse (sort-by (comp :last-error-t deref) @bg-fetching)))
            (resp/content-type "text/plain")))
-  (GET "/posts.edn" []
-       (-> (resp/response (reverse @posts))
-           (resp/content-type "text/plain")))
+  (GET "/posts.edn" [start count q]
+       (let [[start count search] (query-from-params start count q)]
+         (-> (resp/response (get-posts start count search))
+             (resp/content-type "text/plain"))))
   (POST "/superfeedr" req
         (prn (-> req :body slurp))
         "ok")
