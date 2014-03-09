@@ -78,7 +78,7 @@
 
 (defn query-from-params [start count search]
   (let [start (or (parse-int start) 0)
-        count (or (parse-int count) 500)
+        count (or (parse-int count) 100)
         search (or search "")]
     [start count search]))
 
