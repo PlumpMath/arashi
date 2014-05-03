@@ -55,11 +55,7 @@ main :: IO ()
 main = do
     args <- getArgs
     case args of
-        [url] -> do
-            feed <- feedFromURI url
-            Just entries <- fromFetchedFeed feed
-            forM_ entries $ \entry ->
-                print entry
+        [url] -> mapM_ print =<< fetchEntries url
         _ -> do
             Just (Config urls) <- readFile "config.edn" >>= return . decode . convertString
             entriesRef <- newIORef S.empty
