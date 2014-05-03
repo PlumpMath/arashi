@@ -6,11 +6,14 @@ setup:
 
 build:
 	cabal build
+	cp dist/build/arashi/arashi .
 
 release: build
-	cp dist/build/arashi/arashi .
 	strip --strip-unneeded arashi
 	upx arashi
+
+compress: build
+	gzip -c arashi > arashi.gz
 
 clean:
 	rm -f arashi
