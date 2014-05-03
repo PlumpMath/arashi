@@ -6,8 +6,9 @@ import qualified Data.Set as S
 import Control.Concurrent.Chan
 import Data.IORef
 
-import Data.EDN (decode)
+import Data.EDN (decode, encode)
 import Data.String.Conversions (convertString)
+import qualified Data.ByteString.Lazy.Char8 as L8
 
 import Arashi.Core
 import Arashi.Config
@@ -51,6 +52,12 @@ fetchEntriesThread chan url = do
      entries <- fetchEntries url
      writeChan chan entries
 
+saveEntries :: IORef Entries -> IO ()
+saveEntries entriesRef = do
+    entries <- readIORef entriesRef
+    putStrLn $ "store: saving " ++ show (S.size entries) ++ " entries"
+    L8.writeFile "all.edn" $ encode entries
+
 main :: IO ()
 main = do
     args <- getArgs
@@ -63,7 +70,5 @@ main = do
             runPeriodically 10 $ map (\url -> (fetchEntriesThread entriesChan url, 1 * 60)) urls
             forkIO $ collectEntriesThread entriesRef entriesChan
             forever $ do
-                threadDelay $ 30 * 1000 * 1000
-                entriesSet <- readIORef entriesRef
-                putStrLn $ "storing " ++ show (S.size entriesSet) ++ " entries"
-
+                threadDelay $ 1 * 60 * 1000 * 1000
+                saveEntries entriesRef
