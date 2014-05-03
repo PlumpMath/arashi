@@ -1,0 +1,27 @@
+name:                arashi
+version:             0.1.0
+synopsis:            Helping you survive the internet.
+
+homepage:            https://github.com/heyLu/arashi
+license:             MIT
+author:              Lucas Stadler
+maintainer:          lu@papill0n.org
+
+category:            Web
+build-type:          Simple
+extra-source-files:  README.md
+cabal-version:       >=1.10
+
+executable arashi
+  main-is:             Arashi/Main.hs
+
+  other-extensions:    OverloadedStrings
+  build-depends:
+    base >=4.6 && <4.7,
+    feed >=0.3 && <0.4,
+    hedn >=0.1 && <0.2,
+    time >=1.4 && <1.5,
+    old-locale >=1.0 && <1.1,
+    bytestring >=0.10 && <0.11,
+    http-conduit >=2.1 && <2.2
+  default-language:    Haskell2010

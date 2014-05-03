@@ -1,5 +1,5 @@
 {-# LANGUAGE OverloadedStrings #-}
-module Arashi where
+module Arashi.Core where
 
 import Text.Feed.Import (parseFeedString)
 import Text.Feed.Query

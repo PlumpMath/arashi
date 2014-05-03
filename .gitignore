@@ -4,5 +4,6 @@
 
 /cabal.sandbox.config
 /.cabal-sandbox
+/dist
 
 all_posts.edn
