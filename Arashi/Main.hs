@@ -1,3 +1,4 @@
+{-# LANGUAGE ScopedTypeVariables #-}
 import System.Environment (getArgs)
 import Control.Concurrent (forkIO, threadDelay)
 import Data.Set (Set)
@@ -58,7 +59,7 @@ saveEntriesThread entriesRef = do
     threadDelay $ 1 * 60 * 1000 * 1000
     entries <- readIORef entriesRef
     putStrLn $ "store: saving " ++ show (S.size entries) ++ " entries"
-    L8.writeFile "all.edn" $ encode entries
+    L8.writeFile "all_posts.edn" $ encode entries
     saveEntriesThread entriesRef
 
 decodeFile :: (FromEDN v) => FilePath -> IO (Maybe v)
@@ -71,7 +72,8 @@ main = do
         [url] -> mapM_ print =<< fetchEntries url
         _ -> do
             Just (Config urls) <- decodeFile "config.edn"
-            entriesRef <- newIORef S.empty
+            Just entries <- decodeFile "all_posts.edn"
+            entriesRef <- newIORef entries
             entriesChan <- newChan
             runPeriodically 10 $ map (\url -> (fetchEntriesThread entriesChan url, 1 * 60)) urls
             forkIO $ collectEntriesThread entriesRef entriesChan
