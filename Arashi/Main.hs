@@ -64,7 +64,7 @@ main = do
             Just (Config urls) <- readFile "config.edn" >>= return . decode . convertString
             entriesRef <- newIORef S.empty
             entriesChan <- newChan
-            runPeriodically $ map (\url -> (fetchEntriesThread entriesChan url, 1 * 60)) urls
+            runPeriodically 10 $ map (\url -> (fetchEntriesThread entriesChan url, 1 * 60)) urls
             forkIO $ collectEntriesThread entriesRef entriesChan
             forever $ do
                 threadDelay $ 30 * 1000 * 1000

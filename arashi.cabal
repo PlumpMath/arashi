@@ -28,5 +28,6 @@ executable arashi
     tagsoup,
     string-conversions,
     uri,
-    containers
+    containers,
+    SafeSemaphore
   default-language:    Haskell2010
