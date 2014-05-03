@@ -1,5 +1,4 @@
 import System.Environment (getArgs)
-import Control.Monad (forM_, forever)
 import Control.Concurrent (forkIO, threadDelay)
 import Data.Set (Set)
 import qualified Data.Set as S
@@ -14,6 +13,8 @@ import Arashi.Core
 import Arashi.Config
 import Arashi.HTML
 import Arashi.Schedule
+import Arashi.Render
+import Arashi.Server
 
 type Entries = Set Entry
 
@@ -52,11 +53,13 @@ fetchEntriesThread chan url = do
      entries <- fetchEntries url
      writeChan chan entries
 
-saveEntries :: IORef Entries -> IO ()
-saveEntries entriesRef = do
+saveEntriesThread :: IORef Entries -> IO ()
+saveEntriesThread entriesRef = do
+    threadDelay $ 1 * 60 * 1000 * 1000
     entries <- readIORef entriesRef
     putStrLn $ "store: saving " ++ show (S.size entries) ++ " entries"
     L8.writeFile "all.edn" $ encode entries
+    saveEntriesThread entriesRef
 
 main :: IO ()
 main = do
@@ -69,6 +72,5 @@ main = do
             entriesChan <- newChan
             runPeriodically 10 $ map (\url -> (fetchEntriesThread entriesChan url, 1 * 60)) urls
             forkIO $ collectEntriesThread entriesRef entriesChan
-            forever $ do
-                threadDelay $ 1 * 60 * 1000 * 1000
-                saveEntries entriesRef
+            forkIO $ saveEntriesThread entriesRef
+            runServer 4001 entriesRef
