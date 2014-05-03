@@ -89,7 +89,7 @@ fromFeed :: UTCTime -> Feed -> [Entry]
 fromFeed t f = map (fromItem (getFeedHome f) t) $ getFeedItems f
 
 fromItem :: Maybe String -> UTCTime -> Item -> Entry
-fromItem via t i = Entry title url via time
+fromItem via t i = Entry url title via time
     where title = fromMaybe "" $ getItemTitle i
           url = fromMaybe "" $ getItemLink i
           time = fromMaybe t . msum $ map (\g -> g i >>= tryParseTime) [getItemPublishDateString, getItemDate]
