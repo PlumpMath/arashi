@@ -50,7 +50,7 @@ instance ToEDN Entry where
             "url" .= url,
             "title" .= title,
             "via" .= via,
-            "time" .= time
+            "timestamp" .= time
         ]
 
 kw :: C8.ByteString -> Value
@@ -61,7 +61,7 @@ instance FromEDN Entry where
         m .:  kw "url" <*>
         m .:  kw "title" <*>
         m .:? kw "via" <*>
-        m .:  kw "time"
+        m .:  kw "timestamp"
 
 testEntry :: Entry
 testEntry = Entry "http://te.st" "A (tiny) test" Nothing unixEpoch
