@@ -37,6 +37,13 @@ compareByUrlAndTime (Entry urlA _ _ timeA) (Entry urlB _ _ timeB) =
         _  -> timeOrd
   where timeOrd = timeA `compare` timeB
 
+flipOrdering :: (Ord a) => (a -> a -> Ordering) -> a -> a -> Ordering
+flipOrdering compare' x y =
+    case x `compare'` y of
+        LT -> GT
+        EQ -> EQ
+        GT -> LT
+
 instance ToEDN Entry where
     toEDN (Entry url title via time) =
         notag $ makeMap [
