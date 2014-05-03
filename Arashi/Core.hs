@@ -92,5 +92,13 @@ fromItem :: Maybe String -> UTCTime -> Item -> Entry
 fromItem via t i = Entry title url via time
     where title = fromMaybe "" $ getItemTitle i
           url = fromMaybe "" $ getItemLink i
-          time = fromMaybe t . msum $ map (\g -> g i >>= parseRfcTime) [getItemPublishDateString, getItemDate]
-          parseRfcTime = parseTime defaultTimeLocale rfc822DateFormat
+          time = fromMaybe t . msum $ map (\g -> g i >>= tryParseTime) [getItemPublishDateString, getItemDate]
+
+tryParseTime :: String -> Maybe UTCTime
+tryParseTime dateString = msum $
+    map tryFormat [
+        rfc822DateFormat,
+        "%Y-%m-%dT%H:%M:%S%Q%z",
+        "%Y-%m-%dT%H:%M:%SZ"
+    ]
+  where tryFormat format = parseTime defaultTimeLocale format dateString
