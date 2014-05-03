@@ -12,6 +12,7 @@ import Control.Monad (msum)
 import Data.Time
 import System.Locale (defaultTimeLocale, rfc822DateFormat)
 import Data.Maybe (fromMaybe)
+import Data.List (isInfixOf)
 
 import qualified Data.ByteString.Char8 as C8
 import qualified Data.ByteString.Lazy.UTF8 as U8
@@ -43,6 +44,14 @@ flipOrdering compare' x y =
         LT -> GT
         EQ -> EQ
         GT -> LT
+
+class Searchable a where
+    matches :: String -> a -> Bool
+
+instance Searchable Entry where
+    matches search (Entry url title _ _) =
+           search `isInfixOf` url
+        || search `isInfixOf` title
 
 instance ToEDN Entry where
     toEDN (Entry url title via time) =

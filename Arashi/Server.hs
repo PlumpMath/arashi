@@ -41,7 +41,8 @@ app entriesRef = do
     es <- liftIO $ readIORef entriesRef
     count <- readParam' 100 $ getQueryParam "count"
     start <- readParam' 0 $ getQueryParam "start"
-    htmlResponse $ index t $ take count $ drop start $ fromEntries es
+    query <- (return . maybe "" id . fmap convertString) =<< getQueryParam "q"
+    htmlResponse $ index t $ take count $ drop start $ filter (matches query) $ fromEntries es
 
 runServer :: Int -> IORef (Set Entry) -> IO ()
 runServer port = httpServe (setPort port mempty) . app
