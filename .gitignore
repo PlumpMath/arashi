@@ -2,4 +2,7 @@
 .lein*
 .nrepl-port
 
+/cabal.sandbox.config
+/.cabal-sandbox
+
 all_posts.edn
