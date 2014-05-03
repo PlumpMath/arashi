@@ -33,5 +33,8 @@ executable arashi
     blaze-markup,
     blaze-html,
     friendly-time,
+    snap-core,
+    snap-server,
+    transformers,
     utf8-string
   default-language:    Haskell2010
