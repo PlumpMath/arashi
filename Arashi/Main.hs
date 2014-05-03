@@ -56,7 +56,7 @@ fetchEntriesThread chan url = do
 
 saveEntriesThread :: IORef Entries -> IO ()
 saveEntriesThread entriesRef = do
-    threadDelay $ 1 * 60 * 1000 * 1000
+    threadDelay $ 10 * 60 * 1000 * 1000
     entries <- readIORef entriesRef
     putStrLn $ "store: saving " ++ show (S.size entries) ++ " entries"
     L8.writeFile "all_posts.edn" $ encode entries
@@ -75,7 +75,7 @@ main = do
             Just entries <- decodeFile "all_posts.edn"
             entriesRef <- newIORef entries
             entriesChan <- newChan
-            runPeriodically 10 $ map (\url -> (fetchEntriesThread entriesChan url, 1 * 60)) urls
+            runPeriodically 10 $ map (\url -> (fetchEntriesThread entriesChan url, 2 * 60 * 60)) urls
             forkIO $ collectEntriesThread entriesRef entriesChan
             forkIO $ saveEntriesThread entriesRef
-            runServer 4001 entriesRef
+            runServer 3001 entriesRef
