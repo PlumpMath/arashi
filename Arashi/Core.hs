@@ -22,7 +22,20 @@ data Entry = Entry {
     eTitle :: String,
     eVia :: Maybe String,
     eTimestamp :: UTCTime
-} deriving (Show)
+} deriving (Show, Eq)
+
+instance Ord Entry where
+    compare = compareByUrl
+
+compareByUrl :: Entry -> Entry -> Ordering
+compareByUrl e1 e2 = eUrl e1 `compare` eUrl e2
+
+compareByUrlAndTime :: Entry -> Entry -> Ordering
+compareByUrlAndTime (Entry urlA _ _ timeA) (Entry urlB _ _ timeB) =
+    case timeOrd of
+        EQ -> urlA `compare` urlB
+        _  -> timeOrd
+  where timeOrd = timeA `compare` timeB
 
 instance ToEDN Entry where
     toEDN (Entry url title via time) =
