@@ -14,7 +14,7 @@ import System.Locale (defaultTimeLocale, rfc822DateFormat)
 import Data.Maybe (fromMaybe)
 
 import qualified Data.ByteString.Char8 as C8
-import qualified Data.ByteString.Lazy.Char8 as L8
+import qualified Data.ByteString.Lazy.UTF8 as U8
 import Network.HTTP.Conduit
 
 data Entry = Entry {
@@ -70,7 +70,7 @@ fetchFeed url = do
     req <- parseUrl url
     withManager $ \manager -> do
         res <- httpLbs req manager
-        let body = L8.unpack $ responseBody res
+        let body = U8.toString $ responseBody res
         return $ parseFeedString body
 
 fromFetchedFeed :: String -> IO (Maybe [Entry])

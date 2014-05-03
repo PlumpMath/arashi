@@ -29,5 +29,6 @@ executable arashi
     string-conversions,
     uri,
     containers,
-    SafeSemaphore
+    SafeSemaphore,
+    utf8-string
   default-language:    Haskell2010
