@@ -5,7 +5,7 @@ import qualified Data.Set as S
 import Control.Concurrent.Chan
 import Data.IORef
 
-import Data.EDN (decode, encode)
+import Data.EDN (FromEDN, decode, encode)
 import Data.String.Conversions (convertString)
 import qualified Data.ByteString.Lazy.Char8 as L8
 
@@ -61,13 +61,16 @@ saveEntriesThread entriesRef = do
     L8.writeFile "all.edn" $ encode entries
     saveEntriesThread entriesRef
 
+decodeFile :: (FromEDN v) => FilePath -> IO (Maybe v)
+decodeFile p = readFile p >>= return . decode . convertString
+
 main :: IO ()
 main = do
     args <- getArgs
     case args of
         [url] -> mapM_ print =<< fetchEntries url
         _ -> do
-            Just (Config urls) <- readFile "config.edn" >>= return . decode . convertString
+            Just (Config urls) <- decodeFile "config.edn"
             entriesRef <- newIORef S.empty
             entriesChan <- newChan
             runPeriodically 10 $ map (\url -> (fetchEntriesThread entriesChan url, 1 * 60)) urls
