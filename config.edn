@@ -1,10 +1,8 @@
 {:sources
   {;:hackernews ["hn"]
    :paulgraham ["pg"]
-   :twitter [
-    "fogus" "djspiewak" "bodil" "richhickey" "stuarthalloway" "kotarak" "sigfpe"
-    "JenniferDewalt" "LeaVerou"
-    "i_am_prometheus" "worrydream"
+   #_:twitter #_[
+     "wunderseltsam/programming-people"
    ]
    :feed [
      ; tech
