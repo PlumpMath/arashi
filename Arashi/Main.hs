@@ -8,6 +8,8 @@ import qualified Data.Set as S
 import Control.Concurrent.Chan
 import Data.IORef
 import Control.Applicative ((<$>), (<*>), pure)
+import System.IO (stdout)
+import Data.Time (getCurrentTime)
 
 import Data.EDN (FromEDN, decode, encode)
 import Data.String.Conversions (convertString)
@@ -80,6 +82,13 @@ fetchAll = do
     putStrLn $ "got " ++ show (S.size newEntries - S.size entries) ++ " new entries (" ++ show (S.size newEntries) ++ " total)"
     L8.writeFile "all_posts.edn" $ encode entries
 
+generateHtml :: Bool -> Int -> Int -> String -> IO ()
+generateHtml reverse start count query = do
+    Just es <- decodeFile "all_posts.edn"
+    t <- getCurrentTime
+    let entries = take count $ drop start $ filter (matches query) $ fromEntries es
+    L8.hPut stdout $ indexHtml t entries
+
 server :: Int -> Int -> Int -> IO ()
 server n f s = do
     Just (Config urls) <- decodeFile "config.edn"
@@ -106,6 +115,15 @@ fetchAllCmd = (cmd, info)
     where cmd = pure fetchAll
           info = defTI { termName = "fetch-all", termDoc = "Fetch all entries from the feeds in config.edn" }
 
+generateHtmlCmd :: Cmd
+generateHtmlCmd = (cmd, info)
+    where cmd = generateHtml <$> reverse <*> start <*> count <*> query
+          start = value $ opt 0 $ optInfo ["start", "s"]
+          count = value $ opt 100 $ optInfo ["count", "c"]
+          query = value $ opt "" $ optInfo ["query", "q"]
+          reverse = value . flag $ optInfo ["reverse", "r"]
+          info = defTI { termName = "generate-html", termDoc = "Generate an HTML file of the feeds in all_posts.edn" }
+
 runServerCmd :: Cmd
 runServerCmd = (cmd, info)
     where cmd = server <$> numThreads <*> fetchInterval <*> storeInterval
@@ -115,5 +133,5 @@ runServerCmd = (cmd, info)
           info = defTI { termName = "run-server", termDoc = "Fetch all feeds periodically and serve the results with an embedded server" }
 
 main :: IO ()
-main = runChoice (pure $ return (), info) [fetchOneCmd, fetchAllCmd, runServerCmd]
+main = runChoice (pure $ return (), info) [fetchOneCmd, fetchAllCmd, generateHtmlCmd, runServerCmd]
     where info = defTI { termName = "arashi", version = "0.0.1" }
