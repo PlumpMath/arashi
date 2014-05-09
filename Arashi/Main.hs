@@ -72,7 +72,13 @@ fetchOne :: String -> IO ()
 fetchOne url = mapM_ print =<< fetchEntries url
 
 fetchAll :: IO ()
-fetchAll = undefined
+fetchAll = do
+    Just (Config urls) <- decodeFile "config.edn"
+    Just entries <- decodeFile "all_posts.edn"
+    feeds <- sequence $ map fetchEntries urls
+    let newEntries = insertAllNew (concat feeds) entries
+    putStrLn $ "got " ++ show (S.size newEntries - S.size entries) ++ " new entries (" ++ show (S.size newEntries) ++ " total)"
+    L8.writeFile "all_posts.edn" $ encode entries
 
 server :: Int -> Int -> Int -> IO ()
 server n f s = do
