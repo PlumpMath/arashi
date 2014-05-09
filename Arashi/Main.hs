@@ -98,13 +98,13 @@ type Cmd = (Term (IO ()), TermInfo)
 fetchOneCmd :: Cmd
 fetchOneCmd = (cmd, info)
     where cmd = fetchOne <$> url
-          url = required $ pos 0 Nothing $ posInfo { posName = "url"}
-          info = defTI { termName = "fetch-one" }
+          url = required $ pos 0 Nothing $ posInfo { posName = "<url>"}
+          info = defTI { termName = "fetch-one", termDoc = "Fetch and print entries from one feed given by <url>" }
 
 fetchAllCmd :: Cmd
 fetchAllCmd = (cmd, info)
     where cmd = pure fetchAll
-          info = defTI { termName = "fetch-all" }
+          info = defTI { termName = "fetch-all", termDoc = "Fetch all entries from the feeds in config.edn" }
 
 runServerCmd :: Cmd
 runServerCmd = (cmd, info)
@@ -112,7 +112,7 @@ runServerCmd = (cmd, info)
           numThreads = value $ opt 10 $ optInfo ["num-threads", "n"]
           fetchInterval = fmap (* 60) . value $ opt (2 * 60) $ optInfo ["fetch-interval", "f"]
           storeInterval = fmap (* 60) . value $ opt (10) $ optInfo ["store-interval", "s"]
-          info = defTI { termName = "run-server" }
+          info = defTI { termName = "run-server", termDoc = "Fetch all feeds periodically and serve the results with an embedded server" }
 
 main :: IO ()
 main = runChoice (pure $ return (), info) [fetchOneCmd, fetchAllCmd, runServerCmd]
