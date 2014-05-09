@@ -1,10 +1,13 @@
 {-# LANGUAGE ScopedTypeVariables #-}
+
+import System.Console.CmdTheLine
 import System.Environment (getArgs)
 import Control.Concurrent (forkIO, threadDelay)
 import Data.Set (Set)
 import qualified Data.Set as S
 import Control.Concurrent.Chan
 import Data.IORef
+import Control.Applicative ((<$>), (<*>), pure)
 
 import Data.EDN (FromEDN, decode, encode)
 import Data.String.Conversions (convertString)
@@ -54,28 +57,54 @@ fetchEntriesThread chan url = do
      entries <- fetchEntries url
      writeChan chan entries
 
-saveEntriesThread :: IORef Entries -> IO ()
-saveEntriesThread entriesRef = do
-    threadDelay $ 10 * 60 * 1000 * 1000
+saveEntriesThread :: Int -> IORef Entries -> IO ()
+saveEntriesThread i entriesRef = do
+    threadDelay i
     entries <- readIORef entriesRef
     putStrLn $ "store: saving " ++ show (S.size entries) ++ " entries"
     L8.writeFile "all_posts.edn" $ encode entries
-    saveEntriesThread entriesRef
+    saveEntriesThread i entriesRef
 
 decodeFile :: (FromEDN v) => FilePath -> IO (Maybe v)
 decodeFile p = readFile p >>= return . decode . convertString
 
+fetchOne :: String -> IO ()
+fetchOne url = mapM_ print =<< fetchEntries url
+
+fetchAll :: IO ()
+fetchAll = undefined
+
+server :: Int -> Int -> Int -> IO ()
+server n f s = do
+    Just (Config urls) <- decodeFile "config.edn"
+    Just (entries :: Entries) <- decodeFile "all_posts.edn"
+    entriesRef <- newIORef entries
+    entriesChan <- newChan
+    runPeriodically 10 $ map (\url -> (fetchEntriesThread entriesChan url, f)) urls
+    forkIO $ collectEntriesThread entriesRef entriesChan
+    forkIO $ saveEntriesThread s entriesRef
+    runServer 3001 entriesRef
+
+-- console ui
+
+numThreads :: Term Int
+numThreads = value $ opt 10 $ optInfo ["num-threads", "n"]
+
+fetchInterval :: Term Int
+fetchInterval = fmap (* 60) . value $ opt (2 * 60) $ optInfo ["fetch-interval", "f"]
+
+storeInterval :: Term Int
+storeInterval = fmap (* 60) . value $ opt (10) $ optInfo ["store-interval", "s"]
+
+info :: TermInfo
+info = defTI { termName = "arashi", version = "0.0.1" }
+
+command :: Term String
+command = value $ pos 0 "run-server" $ posInfo { posName = "<cmd>", posDoc = "fetch-one, fetch-all or run-server" }
+
 main :: IO ()
-main = do
-    args <- getArgs
-    case args of
-        [url] -> mapM_ print =<< fetchEntries url
-        _ -> do
-            Just (Config urls) <- decodeFile "config.edn"
-            Just entries <- decodeFile "all_posts.edn"
-            entriesRef <- newIORef entries
-            entriesChan <- newChan
-            runPeriodically 10 $ map (\url -> (fetchEntriesThread entriesChan url, 2 * 60 * 60)) urls
-            forkIO $ collectEntriesThread entriesRef entriesChan
-            forkIO $ saveEntriesThread entriesRef
-            runServer 3001 entriesRef
+main = runChoice (pure $ return (), info) [
+    (fetchOne <$> (required $ pos 0 Nothing posInfo), defTI { termName = "fetch-one" }),
+    (pure fetchAll, defTI { termName = "fetch-all" }),
+    (server <$> numThreads <*> fetchInterval <*> storeInterval, defTI { termName = "run-server" })
+    ]

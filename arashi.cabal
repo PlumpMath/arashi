@@ -36,5 +36,6 @@ executable arashi
     snap-core,
     snap-server,
     transformers,
-    utf8-string
+    utf8-string,
+    cmdtheline
   default-language:    Haskell2010
