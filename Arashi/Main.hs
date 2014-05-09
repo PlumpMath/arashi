@@ -1,7 +1,7 @@
 {-# LANGUAGE ScopedTypeVariables #-}
 
 import System.Console.CmdTheLine
-import System.Environment (getArgs)
+
 import Control.Concurrent (forkIO, threadDelay)
 import Data.Set (Set)
 import qualified Data.Set as S
@@ -87,24 +87,27 @@ server n f s = do
 
 -- console ui
 
-numThreads :: Term Int
-numThreads = value $ opt 10 $ optInfo ["num-threads", "n"]
+type Cmd = (Term (IO ()), TermInfo)
 
-fetchInterval :: Term Int
-fetchInterval = fmap (* 60) . value $ opt (2 * 60) $ optInfo ["fetch-interval", "f"]
+fetchOneCmd :: Cmd
+fetchOneCmd = (cmd, info)
+    where cmd = fetchOne <$> url
+          url = required $ pos 0 Nothing $ posInfo { posName = "url"}
+          info = defTI { termName = "fetch-one" }
 
-storeInterval :: Term Int
-storeInterval = fmap (* 60) . value $ opt (10) $ optInfo ["store-interval", "s"]
+fetchAllCmd :: Cmd
+fetchAllCmd = (cmd, info)
+    where cmd = pure fetchAll
+          info = defTI { termName = "fetch-all" }
 
-info :: TermInfo
-info = defTI { termName = "arashi", version = "0.0.1" }
-
-command :: Term String
-command = value $ pos 0 "run-server" $ posInfo { posName = "<cmd>", posDoc = "fetch-one, fetch-all or run-server" }
+runServerCmd :: Cmd
+runServerCmd = (cmd, info)
+    where cmd = server <$> numThreads <*> fetchInterval <*> storeInterval
+          numThreads = value $ opt 10 $ optInfo ["num-threads", "n"]
+          fetchInterval = fmap (* 60) . value $ opt (2 * 60) $ optInfo ["fetch-interval", "f"]
+          storeInterval = fmap (* 60) . value $ opt (10) $ optInfo ["store-interval", "s"]
+          info = defTI { termName = "run-server" }
 
 main :: IO ()
-main = runChoice (pure $ return (), info) [
-    (fetchOne <$> (required $ pos 0 Nothing posInfo), defTI { termName = "fetch-one" }),
-    (pure fetchAll, defTI { termName = "fetch-all" }),
-    (server <$> numThreads <*> fetchInterval <*> storeInterval, defTI { termName = "run-server" })
-    ]
+main = runChoice (pure $ return (), info) [fetchOneCmd, fetchAllCmd, runServerCmd]
+    where info = defTI { termName = "arashi", version = "0.0.1" }
