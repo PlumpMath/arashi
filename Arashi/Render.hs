@@ -22,6 +22,7 @@ index :: UTCTime -> [Entry] -> Markup
 index t entries = html $ do
     head $ do
         title $ "arashi - all posts"
+        meta ! charset "utf8"
         style $ toHtml (".icon { width: 16px; height: 16px }\n"
             ++ ".via { visibility: hidden }\n"
             ++ ".post:hover .via { visibility: visible }" :: String)
