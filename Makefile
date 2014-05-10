@@ -21,7 +21,7 @@ compress: build
 	gzip -c arashi > arashi.gz
 
 clean:
-	rm -f arashi
+	rm -f arashi arashi.{aux,gz,hp,prof,ps}
 
-clean-all:
-	rm -rf dist .cabal-sandbox arashi
+clean-all: clean
+	rm -rf dist .cabal-sandbox
