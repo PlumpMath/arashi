@@ -80,7 +80,7 @@ fetchAll = do
     feeds <- mapM (\url -> putStrLn ("fetching " ++ url) >> fetchEntries url) urls
     let newEntries = insertAllNew (concat feeds) entries
     putStrLn $ "got " ++ show (S.size newEntries - S.size entries) ++ " new entries (" ++ show (S.size newEntries) ++ " total)"
-    L8.writeFile "all_posts.edn" $ encode entries
+    L8.writeFile "all_posts.edn" $ encode newEntries
 
 generateHtml :: Bool -> Int -> Int -> String -> IO ()
 generateHtml reverse start count query = do
