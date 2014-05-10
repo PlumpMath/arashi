@@ -61,7 +61,7 @@ fetchEntriesThread chan url = do
 
 saveEntriesThread :: Int -> IORef Entries -> IO ()
 saveEntriesThread i entriesRef = do
-    threadDelay i
+    threadDelay $ i * 1000 * 1000
     entries <- readIORef entriesRef
     putStrLn $ "store: saving " ++ show (S.size entries) ++ " entries"
     L8.writeFile "all_posts.edn" $ encode entries
