@@ -77,7 +77,7 @@ fetchAll :: IO ()
 fetchAll = do
     Just (Config urls) <- decodeFile "config.edn"
     Just entries <- decodeFile "all_posts.edn"
-    feeds <- sequence $ map fetchEntries urls
+    feeds <- mapM (\url -> putStrLn ("fetching " ++ url) >> fetchEntries url) urls
     let newEntries = insertAllNew (concat feeds) entries
     putStrLn $ "got " ++ show (S.size newEntries - S.size entries) ++ " new entries (" ++ show (S.size newEntries) ++ " total)"
     L8.writeFile "all_posts.edn" $ encode entries
