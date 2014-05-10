@@ -68,7 +68,7 @@ saveEntriesThread i entriesRef = do
     saveEntriesThread i entriesRef
 
 decodeFile :: (FromEDN v) => FilePath -> IO (Maybe v)
-decodeFile p = readFile p >>= return . decode . convertString
+decodeFile p = L8.readFile p >>= return . decode
 
 fetchOne :: String -> IO ()
 fetchOne url = mapM_ print =<< fetchEntries url
