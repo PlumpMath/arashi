@@ -16,7 +16,8 @@ import Data.List (isInfixOf)
 
 import qualified Data.ByteString.Char8 as C8
 import qualified Data.ByteString.Lazy.UTF8 as U8
-import Network.HTTP.Conduit
+
+import Arashi.Util (getHttp)
 
 data Entry = Entry {
     eUrl :: String,
@@ -82,12 +83,7 @@ tinyTest :: Maybe Entry
 tinyTest = decode . encode $ testEntry
 
 fetchFeed :: String -> IO (Maybe Feed)
-fetchFeed url = do
-    req <- parseUrl url
-    withManager $ \manager -> do
-        res <- httpLbs req manager
-        let body = U8.toString $ responseBody res
-        return $ parseFeedString body
+fetchFeed url = getHttp url >>= return . parseFeedString
 
 fromFetchedFeed :: String -> IO (Maybe [Entry])
 fromFetchedFeed url = do

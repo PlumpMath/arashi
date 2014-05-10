@@ -6,7 +6,8 @@ import Text.URI (mergeURIStrings)
 import Text.HTML.TagSoup
 import Text.HTML.TagSoup.Match
 import Data.String.Conversions (convertString)
-import Network.HTTP.Conduit (simpleHttp)
+
+import Arashi.Util (getHttp)
 
 alternatesFromHTML :: (String -> Bool) -> String -> [String]
 alternatesFromHTML typeLike html = map (onlyVal . fromAttrib "href") candidates
@@ -22,7 +23,7 @@ feedsFromHTML = alternatesFromHTML ("xml" `isInfixOf`)
 
 feedsFromURI :: String -> IO [String]
 feedsFromURI uri = do
-    res <- simpleHttp uri
+    res <- getHttp uri
     return . feedsFromHTML $ convertString res
 
 feedFromURI :: String -> IO String
