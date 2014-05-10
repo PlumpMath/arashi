@@ -8,6 +8,11 @@ build:
 	cabal build
 	cp dist/build/arashi/arashi .
 
+# needs `cabal install --only-dependencies --enable-library-profiling`
+profile:
+	cabal build --ghc-options='-rtsopts -prof -auto-all -caf-all'
+	cp dist/build/arashi/arashi .
+
 release: build
 	strip --strip-unneeded arashi
 	upx arashi
