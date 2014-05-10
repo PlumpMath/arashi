@@ -6,5 +6,10 @@
 /.cabal-sandbox
 /dist
 /arashi
+*.aux
+*.gz
+*.hp
+*.prof
+*.ps
 
 all_posts.edn
