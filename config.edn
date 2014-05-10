@@ -7,7 +7,7 @@
    :feed [
      ; tech
      "http://prog21.dadgum.com"
-     "https://github.com/blog/all.atom"
+     ;"https://github.com/blog/all.atom"
      "http://codinghorror.com"
      "http://zachholman.com"
      "http://chris-granger.com"
@@ -20,7 +20,7 @@
      "http://waxy.org"
      "http://scattered-thoughts.net"
      "http://frenchy64.github.io"
-     "https://blog.pinboard.in"
+     ;"https://blog.pinboard.in"
      "http://matt.might.net/articles"
      "http://kennethreitz.org"
      ;"http://evanmiller.org"
