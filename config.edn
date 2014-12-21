@@ -31,11 +31,19 @@
      "http://rachelbythebay.com/w"
      "http://simonsfoundation.org/quanta"
      "http://hackerschool.com/blog"
+     "http://jsomers.net/blog"
+     "http://klingt.net"
+     "http://jneen.net"
+     "http://julieannhorvath.com"
+     "http://juliepagano.com"
+     "http://lizthedeveloper.com/"
 
      "http://chneukirchen.org/trivium"
      "http://waxy.org/links"
 
      "http://lgbtlaughs.tumblr.com"
+
+     "http://www.illdoctrine.com"
 
      ;; planet.clojure.in, planet.haskell.org, planet.gnome.org?
 
