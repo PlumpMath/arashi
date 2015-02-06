@@ -41,13 +41,14 @@ collectEntriesThread :: IORef Entries -> Chan [Entry] -> IO ()
 collectEntriesThread entries chan = do
     newEntries <- readChan chan
     case newEntries of
-        ((Entry _ _ (Just via) _) :_) -> do
+        (Entry _ _ (Just via) _) :_ -> do
             (old, new) <- modifyIORefR entries (insertAllNew newEntries)
             let [oldS, newS] = map S.size [old, new]
-            if oldS /= newS
-            then putStrLn $ "collect: " ++ show (newS - oldS) ++ " new entries from " ++ via
-                ++ " (total: " ++ show newS ++ ")"
-            else putStrLn $ "collect: no new entries from " ++ via
+            putStrLn $
+                if oldS /= newS
+                then "collect: " ++ show (newS - oldS) ++ " new entries from " ++ via
+                     ++ " (total: " ++ show newS ++ ")"
+                else "collect: no new entries from " ++ via
         _ -> return ()
     collectEntriesThread entries chan
 
@@ -129,7 +130,7 @@ runServerCmd = (cmd, info)
     where cmd = server <$> numThreads <*> fetchInterval <*> storeInterval
           numThreads = value $ opt 10 $ optInfo ["num-threads", "n"]
           fetchInterval = fmap (* 60) . value $ opt (2 * 60) $ optInfo ["fetch-interval", "f"]
-          storeInterval = fmap (* 60) . value $ opt (10) $ optInfo ["store-interval", "s"]
+          storeInterval = fmap (* 60) . value $ opt 10 $ optInfo ["store-interval", "s"]
           info = defTI { termName = "run-server", termDoc = "Fetch all feeds periodically and serve the results with an embedded server" }
 
 main :: IO ()
